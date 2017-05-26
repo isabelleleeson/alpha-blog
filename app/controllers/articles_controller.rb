@@ -4,14 +4,22 @@ class ArticlesController < ApplicationController
 	end
 
 	def create
-		#render plain: params[:article].inspect
+		#render plain: params[:article].inspect #displays the object in JSON format
 		@article = Article.new(article_params)
-		@article.save
-		redirect_to articles_show(@article)
+		if @article.save
+			flash[:notice] = "Article was created :)"
+			redirect_to article_path(@article)
+		else
+			render 'new' #or :new
+		end
+	end
+
+	def show
+		@article = Article.find(params[:id])
 	end
 
 	private
 	def article_params
-		params.require(:article).permit(:title, :description)
+		params.require(:article).permit(:title, :description) # article is the top level key
 	end
 end
